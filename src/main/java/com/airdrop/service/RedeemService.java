@@ -2,7 +2,6 @@ package com.airdrop.service;
 
 import com.airdrop.config.code.CodeEnum;
 import com.airdrop.config.exception.ServiceException;
-import com.airdrop.dto.QueryDto;
 import com.airdrop.dto.UpdateDto;
 import com.airdrop.dto._ResultDto;
 import com.airdrop.entity.Redeem;
@@ -37,6 +36,27 @@ public class RedeemService {
     private LogService logService;
 
     /**
+     * 校验兑换码是否可用
+     *
+     * @param redeem
+     * @return
+     */
+    public _ResultDto check(Redeem redeem) {
+        redeem.setDataStatus(0);
+        // 查询
+        List<Redeem> redeems = redeemRepository.findAll(Example.of(redeem));
+        // 判断code是否可用
+        if (redeems != null && redeems.size() < 1) {
+            new ServiceException(CodeEnum.CODE_400.getCode(), "兑换码不存在");
+        } else {
+            if (redeems.get(0).getUseStatus() != 1) {
+                new ServiceException(CodeEnum.CODE_400.getCode(), "兑换码已经被使用");
+            }
+        }
+        return new _ResultDto();
+    }
+
+    /**
      * 创建兑换码
      *
      * @param length
@@ -56,7 +76,7 @@ public class RedeemService {
         // 保存到数据库
         redeems = redeemRepository.saveAll(redeems);
         // 添加日志
-        logService.insertLog(user.getId(), user.getName() + "创建了" + count + "个验证码，长度为：" + length, LogUtil.SUCCESS);
+        logService.insertLogB(user.getId(), user.getName() + "创建了" + count + "个验证码，长度为：" + length, LogUtil.SUCCESS);
         return new UpdateDto(redeems);
     }
 
@@ -67,12 +87,12 @@ public class RedeemService {
      * @param pageable
      * @return
      */
-    public QueryDto find(Redeem redeem, Pageable pageable) {
+    public Page<Redeem> find(Redeem redeem, Pageable pageable) {
         // 设置查询条件
         redeem.setDataStatus(0);
         // 调用查询方法
         Page<Redeem> pages = redeemRepository.findAll(Example.of(redeem), pageable);
-        return new QueryDto(pages);
+        return pages;
     }
 
     /**
@@ -92,7 +112,7 @@ public class RedeemService {
         // 获取当前登陆用户
         UserVo user = TokenUtil.getUser(token);
         // 添加日志
-        logService.insertLog(user.getId(), user.getName() + "删除了验证码ID：" + id, LogUtil.SUCCESS);
+        logService.insertLogB(user.getId(), user.getName() + "删除了验证码ID：" + id, LogUtil.SUCCESS);
         return new _ResultDto();
     }
 
@@ -106,13 +126,14 @@ public class RedeemService {
     @Transactional
     public _ResultDto update(Redeem redeem, String token) {
         // 校验id是否正确
-        checkedId(redeem.getId());
+        Redeem oldRe = checkedId(redeem.getId());
+        oldRe.replace(redeem);
         // 获取当前登陆用户
         UserVo user = TokenUtil.getUser(token);
         // 修改操作
-        if (redeemRepository.updateAirDrop(redeem.getAirDrop(), redeem.getId()) == 0) {
-            throw new ServiceException(CodeEnum.CODE_500.getCode(), "数据修改失败");
-        }
+        redeemRepository.saveAndFlush(oldRe);
+        // 添加日志
+        logService.insertLogB(user.getId(), user.getName() + "修改了兑换码ID：" + redeem.getId(), LogUtil.SUCCESS);
         return new _ResultDto();
     }
 
@@ -122,10 +143,12 @@ public class RedeemService {
      * @param id
      * @return true：存在
      */
-    private void checkedId(int id) {
-        if (redeemRepository.getOne(id) == null) {
+    private Redeem checkedId(int id) {
+        Redeem one = redeemRepository.getOne(id);
+        if (one == null) {
             throw new ServiceException(CodeEnum.CODE_400.getCode(), "ID已被删除或不存在");
         }
+        return one;
     }
 
 }

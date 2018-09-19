@@ -1,5 +1,6 @@
 package com.airdrop.entity;
 
+import com.airdrop.util.StringUtil;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -81,6 +82,23 @@ public class Redeem implements Serializable {
         this.airDrop = airDrop;
         this.dataStatus = 0;
         this.useStatus = 0;
+    }
+
+    /**
+     * 数据替换
+     *
+     * @param redeem
+     */
+    public void replace(Redeem redeem) {
+        if (StringUtil.isNotEmpty(redeem.getRedeemCode())) {
+            this.redeemCode = redeem.getRedeemCode();
+        }
+        if (StringUtil.isNotEmpty(redeem.getAirDrop())) {
+            this.airDrop = redeem.getAirDrop();
+        }
+        if (redeem.getUseStatus() != null) {
+            this.useStatus = redeem.getUseStatus();
+        }
     }
 
 }

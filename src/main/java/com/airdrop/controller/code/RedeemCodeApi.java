@@ -44,7 +44,14 @@ public class RedeemCodeApi {
     @ApiOperation("查询兑换码")
     @GetMapping
     public QueryDto find(Redeem redeem, PageDto pageDto) {
-        return redeemService.find(redeem, PageRequest.of(pageDto.getPage(), pageDto.getRows(), pageDto.getSort()));
+        return new QueryDto(redeemService.find(redeem, PageRequest.of(pageDto.getPage(), pageDto.getRows(), pageDto.getSort())));
+    }
+
+    @ApiOperation("校验兑换码是否可使用")
+    @ApiImplicitParam(name = "redeemCode", dataType = "string", required = true)
+    @PostMapping("/check")
+    public _ResultDto check(@RequestBody Redeem redeem) {
+        return redeemService.check(redeem);
     }
 
     @ApiOperation("删除数据")
