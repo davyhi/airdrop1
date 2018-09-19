@@ -39,6 +39,15 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
             nativeQuery = true)
     User findByUsername(String username);
 
+    /**
+     * 后台系统根据手机号登陆
+     *
+     * @param     phone
+     * @return
+     */
+    @Query(value = "SELECT t.* FROM t_user t WHERE t.`status` = 0 AND t.`phone`=?1 AND t.`type`=1", nativeQuery = true)
+    User findByPhoneB(String phone);
+
 
 
     @Modifying

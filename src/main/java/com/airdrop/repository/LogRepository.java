@@ -56,8 +56,28 @@ public interface LogRepository extends JpaRepository<Log, Long>, JpaSpecificatio
             nativeQuery = true, countQuery = "select COUNT(1) from t_log t,t_user t2 where t.user_id = t2.id and t.content like concat('%',:content,'%')")
     Page<Log> findByContent(@Param("content") String content, Pageable pageable);
 
+    /**
+     * 插入前台日志
+     *
+     * @param content
+     * @param type
+     * @param userid
+     * @return
+     */
     @Query(value = "insert into t_log(content,`type`,user_id) values(?1,?2,?3)", nativeQuery = true)
     @Modifying
     int insert(String content, int type, int userid);
+
+    /**
+     * 插入后台日志
+     *
+     * @param content
+     * @param type
+     * @param userid
+     * @return
+     */
+    @Query(value = "insert into t_log(content,`type`,user_id,qh) values(?1,?2,?3,1)", nativeQuery = true)
+    @Modifying
+    int insertB(String content, int type, int userid);
 
 }

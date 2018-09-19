@@ -30,5 +30,8 @@ public class UpdateDto extends _ResultDto implements Serializable {
         this.data = data;
     }
 
-
+    public UpdateDto(int code, String msg) {
+        super.setCode(code);
+        super.setMessage(msg);
+    }
 }

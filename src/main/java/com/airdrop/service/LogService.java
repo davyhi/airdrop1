@@ -67,4 +67,17 @@ public class LogService {
         logRepository.insert(content, type, id);
     }
 
+    /**
+     * 添加后台日志信息
+     *
+     * @param id      当前登陆用户id
+     * @param content 日志内容
+     * @param type    日志类型
+     */
+    @Async("myExecutor")
+    @Transactional
+    public void insertLogB(int id, String content, int type) {
+        logRepository.insertB(content, type, id);
+    }
+
 }
