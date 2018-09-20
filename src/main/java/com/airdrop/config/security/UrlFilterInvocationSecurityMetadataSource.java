@@ -60,6 +60,9 @@ public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocati
      * @return true：通过，否则请求资源不存在或权限不足
      */
     private boolean checkPri(List<Privileges> privilegesList, String rUrl, String type) {
+        if (privilegesList == null) {
+            return false;
+        }
         //匹配资源
         for (Privileges privileges : privilegesList) {
             if (StringUtils.isEmpty(privileges.getUrl()) || StringUtils.isEmpty(privileges.getType())) {
