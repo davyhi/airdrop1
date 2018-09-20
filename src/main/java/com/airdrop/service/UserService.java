@@ -6,9 +6,11 @@ import com.airdrop.dto.UpdateDto;
 import com.airdrop.entity.Privileges;
 import com.airdrop.entity.Role;
 import com.airdrop.entity.User;
+import com.airdrop.entity.UserRole;
 import com.airdrop.repository.PrivilegesRepository;
 import com.airdrop.repository.RoleRepository;
 import com.airdrop.repository.UserRepository;
+import com.airdrop.repository.UserRoleRepository;
 import com.airdrop.util.*;
 import com.airdrop.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private UserRoleRepository userRoleRepository;
 
     @Autowired
     private LogService logService;
@@ -127,6 +132,8 @@ public class UserService implements UserDetailsService {
         if (null == user || user.getId() == null) {
             throw new ServiceException(CodeEnum.CODE_500.getCode(), CodeEnum.CODE_500.getMessage());
         }
+        //添加默认角色
+        userRoleRepository.save(new UserRole(user.getId(), 1L));
         return new UpdateDto(user);
     }
 
