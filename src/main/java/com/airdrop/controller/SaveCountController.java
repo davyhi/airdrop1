@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.airdrop.dto.QueryDto;
+import com.airdrop.dto.UpdateDto;
 import com.airdrop.entity.User;
 import com.airdrop.service.UserService;
 import com.airdrop.util.CookieUtil2;
@@ -135,4 +137,20 @@ public class SaveCountController {
         return "500";
     }
 
-}}
+
+
+
+    }
+    //查询历史余额之和
+    @GetMapping("/checkTotalMoney")
+    public UpdateDto checkTotalMoney(HttpServletRequest request, HttpServletResponse response ){
+        ServletContext app3 = request.getServletContext();
+        String xixihaha = (String)app3.getAttribute("xixihaha");
+        UserVo user = TokenUtil.getUser(xixihaha);
+        UpdateDto totalMoney = userService.checkTotalMoney(user.getId());
+        return totalMoney;
+    }
+
+
+}
+

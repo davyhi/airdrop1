@@ -1,6 +1,7 @@
 package com.airdrop.repository;
 
 import com.airdrop.entity.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -62,6 +63,8 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
     @Query(value = "select money from t_user where email = ?1", nativeQuery = true)
     Integer findSpecialBalanceByEmail(String number);
 
-
+    //查询用户余额之总和
+    @Query(value = "select sum(money) from t_user_history where id = ?1", nativeQuery = true)
+    Integer checkTotalMoney(Integer id);
 }
 

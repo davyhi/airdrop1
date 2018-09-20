@@ -45,15 +45,17 @@ public class LoginController {
 
     @ApiOperation("账户登陆接口")
     @PostMapping("/login")
-    public int login(@RequestParam String username, @RequestParam String password, HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public UpdateDto login(@RequestParam String username, @RequestParam String password, HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        UpdateDto login = userService.login(username, password, session, request, response);
-        if (login.getCode() == 200) {
+       return userService.login(username, password, session, request, response);
 
-            return 200;
-        } else {
-            return 400;
-        }
+        //public UpdateDto bLogin(@RequestParam(required = false) String username, @RequestParam(required = false) String password, HttpSession session) {
+        //    if (StringUtil.isEmpty(username) || StringUtil.isEmpty(password)) {
+        //        throw new ServiceException(CodeEnum.CODE_400.getCode(), "用户名或密码不能为空");
+        //    }
+        //    return userService.bLogin(username, password, session);
+        //}
+
     }
 
     @ApiOperation("账户注销登陆")

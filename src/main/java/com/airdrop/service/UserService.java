@@ -2,6 +2,7 @@ package com.airdrop.service;
 
 import com.airdrop.config.code.CodeEnum;
 import com.airdrop.config.exception.ServiceException;
+import com.airdrop.dto.QueryDto;
 import com.airdrop.dto.UpdateDto;
 import com.airdrop.entity.Privileges;
 import com.airdrop.entity.Role;
@@ -12,11 +13,14 @@ import com.airdrop.repository.UserRepository;
 import com.airdrop.util.*;
 import com.airdrop.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import sun.tools.jstat.Token;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +28,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.airdrop.util.CookieUtil2.setCookie;
 
 
 /**
@@ -100,7 +106,7 @@ public class UserService implements UserDetailsService {
         // 生成token,保存用户信息到session
         String token = TokenUtil.createToken(new UserVo(user.getId(), user.getName(), user.getEmail(), user.getPhone(), pris, roles));
         session.setAttribute(token, true);
-        //setCookie(request, response, "davy", token, -1);
+       //setCookie(request, response, "davy", token, -1);
         ServletContext app1 = request.getServletContext();
         app1.setAttribute("xixihaha", token);
         response.setHeader("Authorization", token);
@@ -267,4 +273,15 @@ public class UserService implements UserDetailsService {
         SessionUtil.addUser(token, session);
         return token;
     }
+
+
+    //查询用户历史余额之总和
+    public UpdateDto checkTotalMoney(Integer id) {
+
+        Integer totalMoney = userRepository.checkTotalMoney(id);
+        return new UpdateDto(totalMoney);
+
+
+    }
+
 }
