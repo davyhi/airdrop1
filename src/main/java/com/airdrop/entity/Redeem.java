@@ -1,6 +1,7 @@
 package com.airdrop.entity;
 
 import com.airdrop.util.StringUtil;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -28,7 +29,7 @@ public class Redeem implements Serializable {
      * 兑换码
      */
     @Column(name = "redeem_code")
-        private String redeemCode;
+    private String redeemCode;
 
     /**
      * 空投值
@@ -74,6 +75,7 @@ public class Redeem implements Serializable {
     /**
      * 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_stamp")
     private Timestamp createStamp;
 
