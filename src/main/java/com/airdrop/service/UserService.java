@@ -133,7 +133,7 @@ public class UserService implements UserDetailsService {
             throw new ServiceException(CodeEnum.CODE_500.getCode(), CodeEnum.CODE_500.getMessage());
         }
         //添加默认角色
-        userRoleRepository.save(new UserRole(user.getId(), 1L));
+        userRoleRepository.saveAndFlush(new UserRole(user.getId(), 1L));
         return new UpdateDto(user);
     }
 
