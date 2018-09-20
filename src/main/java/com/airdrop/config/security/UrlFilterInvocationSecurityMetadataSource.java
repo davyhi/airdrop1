@@ -38,7 +38,7 @@ public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocati
         // 获取token
         String token = fi.getRequest().getHeader(TokenUtil.TOKEN);
         // 判断token是否有效
-        if (SessionUtil.checkUser(token)) {
+        if (token!=null && SessionUtil.checkUser(token)) {
             String rUrl = StringUtil.subLeft(fi.getRequestUrl(), 0, "?");
             // 判断当前请求是否在用户权限范围内,
             UserVo user = TokenUtil.getUser(token);

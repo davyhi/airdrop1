@@ -2,6 +2,7 @@ package com.airdrop.service;
 
 import com.airdrop.config.code.CodeEnum;
 import com.airdrop.config.exception.ServiceException;
+import com.airdrop.dto.RedeemDto;
 import com.airdrop.dto.UpdateDto;
 import com.airdrop.dto._ResultDto;
 import com.airdrop.entity.Redeem;
@@ -59,24 +60,24 @@ public class RedeemService {
     /**
      * 创建兑换码
      *
-     * @param length
-     * @param count
+     * @param redeemDto
+     * @param token
      * @return
      */
-    public UpdateDto createRedeem(int length, int count, String airDrop, String token) {
+    public UpdateDto createRedeem(RedeemDto redeemDto, String token) {
         // 存储兑换码集合
         List<Redeem> redeems = new ArrayList<>();
         // 获取当前登陆用户
         UserVo user = TokenUtil.getUser(token);
         // 根据count循环生成兑换码
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < redeemDto.getCount(); i++) {
             // 生成兑换码，并存储到集合
-            redeems.add(new Redeem(RedeemCodeUtils.createBigSmallLetterStrOrNumberRadom(length), user.getId(), airDrop));
+            redeems.add(new Redeem(RedeemCodeUtils.createBigSmallLetterStrOrNumberRadom(redeemDto.getLength()), user.getId(), redeemDto.getAirDrop(), redeemDto.getRemark()));
         }
         // 保存到数据库
         redeems = redeemRepository.saveAll(redeems);
         // 添加日志
-        logService.insertLogB(user.getId(), user.getName() + "创建了" + count + "个验证码，长度为：" + length, LogUtil.SUCCESS);
+        logService.insertLogB(user.getId(), user.getName() + "创建了" + redeemDto.getCount() + "个验证码，长度为：" + redeemDto.getLength(), LogUtil.SUCCESS);
         return new UpdateDto(redeems);
     }
 

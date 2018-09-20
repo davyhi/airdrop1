@@ -28,7 +28,7 @@ public class Redeem implements Serializable {
      * 兑换码
      */
     @Column(name = "redeem_code")
-    private String redeemCode;
+        private String redeemCode;
 
     /**
      * 空投值
@@ -47,6 +47,11 @@ public class Redeem implements Serializable {
      */
     @Column(name = "get_stamp")
     private Timestamp getStamp;
+
+    /**
+     * 备注
+     */
+    private String remark;
 
     /**
      * 创建人
@@ -76,12 +81,13 @@ public class Redeem implements Serializable {
 
     }
 
-    public Redeem(String code, int userid, String airDrop) {
+    public Redeem(String code, int userid, String airDrop, String remark) {
         this.redeemCode = code;
         this.userId = userid;
         this.airDrop = airDrop;
         this.dataStatus = 0;
         this.useStatus = 0;
+        this.remark = remark;
     }
 
     /**
@@ -98,6 +104,9 @@ public class Redeem implements Serializable {
         }
         if (redeem.getUseStatus() != null) {
             this.useStatus = redeem.getUseStatus();
+        }
+        if (StringUtil.isNotEmpty(redeem.getRemark())) {
+            this.remark = redeem.getRemark();
         }
     }
 

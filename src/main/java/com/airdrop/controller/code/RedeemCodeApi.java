@@ -1,9 +1,6 @@
 package com.airdrop.controller.code;
 
-import com.airdrop.dto.PageDto;
-import com.airdrop.dto.QueryDto;
-import com.airdrop.dto.UpdateDto;
-import com.airdrop.dto._ResultDto;
+import com.airdrop.dto.*;
 import com.airdrop.entity.Redeem;
 import com.airdrop.service.RedeemService;
 import com.airdrop.util.TokenUtil;
@@ -32,13 +29,9 @@ public class RedeemCodeApi {
     private RedeemService redeemService;
 
     @ApiOperation("生成兑换码")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "length", dataType = "int", defaultValue = "16", required = true, paramType = "query"),
-            @ApiImplicitParam(name = "count", dataType = "int", defaultValue = "1", required = true, paramType = "query")
-    })
     @PostMapping
-    public UpdateDto createCode(@RequestParam("airDrop") String airDrop, @RequestParam(name = "length", defaultValue = "16", required = false) Integer length, @RequestParam(name = "count", defaultValue = "1") Integer count, HttpServletRequest request) {
-        return redeemService.createRedeem(length, count, airDrop, request.getHeader(TokenUtil.TOKEN));
+    public UpdateDto createCode(@RequestBody RedeemDto redeemDto, HttpServletRequest request) {
+        return redeemService.createRedeem(redeemDto, request.getHeader(TokenUtil.TOKEN));
     }
 
     @ApiOperation("查询兑换码")
@@ -65,6 +58,13 @@ public class RedeemCodeApi {
     public _ResultDto update(@PathVariable("id") Integer id, @RequestBody Redeem redeem, HttpServletRequest request) {
         redeem.setId(id);
         return redeemService.update(redeem, request.getHeader(TokenUtil.TOKEN));
+    }
+
+    @ApiOperation("后台系统首页需要的空投数据")
+    @GetMapping("/home")
+    public UpdateDto home() {
+
+        return new UpdateDto();
     }
 
 
