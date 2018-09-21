@@ -130,12 +130,22 @@ public class UserService implements UserDetailsService {
         user = userRepository.saveAndFlush(user);
         // 判断是否添加成功
         if (null == user || user.getId() == null) {
+
+
             throw new ServiceException(CodeEnum.CODE_500.getCode(), CodeEnum.CODE_500.getMessage());
         }
         //添加默认角色
         userRoleRepository.saveAndFlush(new UserRole(user.getId(), 1L));
         return new UpdateDto(user);
     }
+    //手机注册
+    public UpdateDto registerPhone(User user) {
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword().trim()));
+        this.userRepository.save(user);
+        userRoleRepository.saveAndFlush(new UserRole(user.getId(), 1L));
+        return new UpdateDto(user);
+    }
+
 
     /**
      * 校验（手机号/邮箱），密码是否是空数据
@@ -181,16 +191,11 @@ public class UserService implements UserDetailsService {
         return this.userRepository.checkUserByEmail(email);
     }
 
-    //手机注册
-    public UpdateDto registerPhone(User user) {
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword().trim()));
-        this.userRepository.save(user);
-        return new UpdateDto(user);
-    }
 
     public UpdateDto registerEmail(User user) {
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword().trim()));
         this.userRepository.save(user);
+        userRoleRepository.saveAndFlush(new UserRole(user.getId(), 1L));
         return new UpdateDto(user);
 
     }

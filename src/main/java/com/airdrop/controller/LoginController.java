@@ -48,14 +48,6 @@ public class LoginController {
     public UpdateDto login(@RequestParam String username, @RequestParam String password, HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
        return userService.login(username, password, session, request, response);
-
-        //public UpdateDto bLogin(@RequestParam(required = false) String username, @RequestParam(required = false) String password, HttpSession session) {
-        //    if (StringUtil.isEmpty(username) || StringUtil.isEmpty(password)) {
-        //        throw new ServiceException(CodeEnum.CODE_400.getCode(), "用户名或密码不能为空");
-        //    }
-        //    return userService.bLogin(username, password, session);
-        //}
-
     }
 
     @ApiOperation("账户注销登陆")
