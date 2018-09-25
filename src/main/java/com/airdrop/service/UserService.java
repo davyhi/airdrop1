@@ -2,7 +2,9 @@ package com.airdrop.service;
 
 import com.airdrop.config.code.CodeEnum;
 import com.airdrop.config.exception.ServiceException;
+import com.airdrop.dto.QueryDto;
 import com.airdrop.dto.UpdateDto;
+import com.airdrop.dto._ResultDto;
 import com.airdrop.entity.Privileges;
 import com.airdrop.entity.Role;
 import com.airdrop.entity.User;
@@ -11,19 +13,23 @@ import com.airdrop.repository.PrivilegesRepository;
 import com.airdrop.repository.RoleRepository;
 import com.airdrop.repository.UserRepository;
 import com.airdrop.repository.UserRoleRepository;
+import com.airdrop.repository.dao.UserDao;
 import com.airdrop.util.*;
 import com.airdrop.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,6 +54,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRoleRepository userRoleRepository;
+
+    @Autowired
+    private UserDao userDao;
 
     @Autowired
     private LogService logService;
@@ -148,6 +157,7 @@ public class UserService implements UserDetailsService {
         userRoleRepository.saveAndFlush(new UserRole(userid, 1L));
         return new UpdateDto(user);
     }
+
     //手机注册
     public UpdateDto registerPhone(User user) {
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword().trim()));
@@ -248,9 +258,9 @@ public class UserService implements UserDetailsService {
             throw new ServiceException(CodeEnum.CODE_400.getCode(), "用户名或密码输入错误，登录失败!");
         }
         // 判断用户是否被禁用
-        //if (user.getEnable()) {
-        //    throw new ServiceException(CodeEnum.CODE_400.getCode(), "账户被禁用，登录失败，请联系管理员!");
-        //}
+        if (user.getEnable()) {
+            throw new ServiceException(CodeEnum.CODE_400.getCode(), "账户被禁用，登录失败，请联系管理员!");
+        }
         // 设置用户登陆信息
         String token = setUserLoginInfoTwo(session, user);
         // 更新日志
@@ -288,6 +298,51 @@ public class UserService implements UserDetailsService {
         session.setMaxInactiveInterval(60 * 60);
         SessionUtil.addUser(token, session);
         return token;
+    }
+
+    /**
+     * 后台用户查询
+     *
+     * @param user
+     * @param pageable
+     * @return
+     */
+    public QueryDto find(User user, Pageable pageable) {
+        return userDao.findJoinMoney(pageable);
+    }
+
+    /**
+     * 后台用户删除
+     *
+     * @param id
+     * @param token
+     * @return
+     */
+    @Transactional
+    public _ResultDto delete(int id, String token) {
+        if (userRepository.deleteById(id) < 1) {
+            throw new ServiceException(CodeEnum.CODE_500.getCode(), "删除失败");
+        }
+        UserVo user = TokenUtil.getUser(token);
+        logService.insertLogB(user.getId(), user.getName() + "删除了用户id：" + id, LogUtil.SUCCESS);
+        return new _ResultDto();
+    }
+
+    /**
+     * 后台用户修改信息
+     *
+     * @param user
+     * @param token
+     * @return
+     */
+    public _ResultDto update(User user, String token) {
+        User one = userRepository.getById(user.getId());
+        if (one == null) {
+            throw new ServiceException(CodeEnum.CODE_400.getCode(), "ID不存在或者已经被删除");
+        }
+        one.replace(user);
+        userRepository.saveAndFlush(one);
+        return new _ResultDto();
     }
 
 

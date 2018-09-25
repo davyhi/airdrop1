@@ -25,8 +25,6 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
     @Query(value = "select count(*) from t_user where email = ?1",nativeQuery = true)
     Integer checkUserByEmail(String email);
 
-
-
     @Query(value = "select money from t_user where id = ?1",nativeQuery = true)
     Integer  findBalanceByUserId(Integer id);
 
@@ -49,7 +47,22 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
     @Query(value = "SELECT t.* FROM t_user t WHERE t.`status` = 0 AND t.`phone`=?1 AND t.`type`=1", nativeQuery = true)
     User findByPhoneB(String phone);
 
+    /**
+     * 删除用户
+     * @param id
+     * @return
+     */
+    @Query(value = "update t_user t set t.`status` = 1 where t.id = ?1",nativeQuery = true)
+    @Modifying
+    int deleteById(int id);
 
+    /**
+     * 根据用户id查询
+     * @param id
+     * @return
+     */
+    @Query(value = "select t.* from t_user t where t.`status` = 0 and t.id = ?1", nativeQuery = true)
+    User getById(int id);
 
     @Modifying
     @Transactional

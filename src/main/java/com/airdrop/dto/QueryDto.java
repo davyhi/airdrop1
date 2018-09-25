@@ -58,11 +58,13 @@ public class QueryDto extends _ResultDto {
      * @param page
      * @param size
      */
-    public void setData(Object list, int page, int size, long total) {
+    public QueryDto setData(Object list, int page, int size, long total,int pages) {
         this.setData(list);
         this.setPageNum(page + 1);
         this.setPageSize(size);
         this.setTotal(total);
+        this.setPages(pages);
+        return this;
     }
 
     public long getTotal() {

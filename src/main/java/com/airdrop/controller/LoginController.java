@@ -64,11 +64,11 @@ public class LoginController {
 
     @ApiOperation("后台系统登陆")
     @PostMapping("/bLogin")
-    public UpdateDto bLogin(@RequestParam(required = false) String username, @RequestParam(required = false) String password, HttpSession session) {
+    public UpdateDto bLogin(@RequestParam(required = false) String username, @RequestParam(required = false) String password, HttpServletRequest request) {
         if (StringUtil.isEmpty(username) || StringUtil.isEmpty(password)) {
             throw new ServiceException(CodeEnum.CODE_400.getCode(), "用户名或密码不能为空");
         }
-        return userService.bLogin(username, password, session);
+        return userService.bLogin(username, password, request.getSession());
     }
 
     @ApiOperation("后台和后端心跳连接")

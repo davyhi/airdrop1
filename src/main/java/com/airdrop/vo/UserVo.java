@@ -2,9 +2,11 @@ package com.airdrop.vo;
 
 import com.airdrop.entity.Privileges;
 import com.airdrop.entity.Role;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -26,6 +28,16 @@ public class UserVo implements Serializable {
 
     private String token;
 
+    private String eos;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Timestamp lastStamp;
+
+    private Integer money;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Timestamp createStamp;
+
     private List<Privileges> pris;
 
     private List<Role> roles;
@@ -37,6 +49,10 @@ public class UserVo implements Serializable {
         this.phone = phone;
         this.pris = privileges;
         this.roles = roles;
+    }
+
+    public UserVo() {
+
     }
 
 }

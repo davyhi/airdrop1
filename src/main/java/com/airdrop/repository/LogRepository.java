@@ -22,39 +22,9 @@ public interface LogRepository extends JpaRepository<Log, Long>, JpaSpecificatio
      *
      * @return
      */
-    @Query(value = "select t.id,t.content,t2.`name` ,t.type,t.create_stamp,t.user_id from t_log t,t_user t2 where t.user_id = t2.id order by t.id desc",
-            nativeQuery = true, countQuery = "select COUNT(1) from t_log t,t_user t2 where t.user_id = t2.id")
-    Page<Log> findAllData(Pageable pageable);
-
-    /**
-     * 分页查询
-     *
-     * @param userid 用户id
-     * @return
-     */
-    @Query(value = "select t.id,t.content,t2.`name` ,t.type,t.create_stamp,t.user_id from t_log t,t_user t2 where t.user_id = t2.id and t.user_id = ?1 order by t.id desc",
-            nativeQuery = true, countQuery = "select COUNT(1) from t_log t,t_user t2 where t.user_id = t2.id and t.user_id = ?1")
-    Page<Log> findByUserid(int userid, Pageable pageable);
-
-    /**
-     * 分页查询
-     *
-     * @param userid 用户id
-     * @return
-     */
-    @Query(value = "select t.id,t.content,t2.`name` ,t.type,t.create_stamp,t.user_id from t_log t,t_user t2 where t.user_id = t2.id and t.user_id = :userid and t.content like concat('%',:content,'%') order by t.id desc",
-            nativeQuery = true, countQuery = "select COUNT(1) from t_log t,t_user t2 where t.user_id = t2.id and t.user_id = :userid and t.content like concat('%',:content,'%')")
-    Page<Log> findByUseridContent(@Param("userid") int userid, @Param("content") String content, Pageable pageable);
-
-    /**
-     * 分页查询
-     *
-     * @param content 日志内容
-     * @return
-     */
-    @Query(value = "select t.id,t.content,t2.`name` ,t.type,t.create_stamp,t.user_id from t_log t,t_user t2 where t.user_id = t2.id and t.content like concat('%',:content,'%') order by t.id desc",
-            nativeQuery = true, countQuery = "select COUNT(1) from t_log t,t_user t2 where t.user_id = t2.id and t.content like concat('%',:content,'%')")
-    Page<Log> findByContent(@Param("content") String content, Pageable pageable);
+    @Query(value = "select t.id,t.content,t2.`name` ,t.type,t.create_stamp,t.user_id from t_log t,t_user t2 where t.user_id = t2.id and t.qh = 1",
+            nativeQuery = true, countQuery = "select COUNT(1) from t_log t where t.qh = 1")
+    Page<Log> findAll(Pageable pageable);
 
     /**
      * 插入前台日志

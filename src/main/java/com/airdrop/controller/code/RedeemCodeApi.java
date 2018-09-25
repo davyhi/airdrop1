@@ -37,7 +37,7 @@ public class RedeemCodeApi {
     @ApiOperation("查询兑换码")
     @GetMapping
     public QueryDto find(Redeem redeem, PageDto pageDto) {
-        return new QueryDto(redeemService.find(redeem, PageRequest.of(pageDto.getPage(), pageDto.getRows(), pageDto.getSort())));
+        return redeemService.find(redeem, PageRequest.of(pageDto.getPage(), pageDto.getRows(), pageDto.getSort()));
     }
 
     @ApiOperation("校验兑换码是否可使用")

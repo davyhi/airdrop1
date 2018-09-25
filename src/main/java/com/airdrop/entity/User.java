@@ -1,5 +1,7 @@
 package com.airdrop.entity;
 
+import com.airdrop.util.StringUtil;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -68,9 +70,26 @@ public class User implements Serializable {
      * 创建时间
      */
     @Column(name = "create_stamp")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createStamp;
 
     public User() {
+
+    }
+
+    public void replace(User user) {
+        if (StringUtil.isNotEmpty(user.getName())) {
+            this.name = user.getName();
+        }
+        if (StringUtil.isNotEmpty(user.getPhone())) {
+            this.phone = user.getPhone();
+        }
+        if (StringUtil.isNotEmpty(user.getEmail())) {
+            this.email = user.getEmail();
+        }
+        if (user.getMoney() != null) {
+            this.money = user.getMoney();
+        }
 
     }
 

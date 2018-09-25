@@ -28,7 +28,7 @@ public class LogUtil {
 
     // 打印信息
     public static void pringError(String content) {
-        log.error(content);
+        if (isBol) log.error(content);
     }
 
     // 打印信息
