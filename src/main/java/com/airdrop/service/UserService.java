@@ -63,8 +63,12 @@ public class UserService implements UserDetailsService {
      */
     public UpdateDto login(String username, String password, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
         // 获取用户信息
+
         User user = userRepository.findByUsername(username);
         // 判断用户、密码是否正确
+        BCryptPasswordEncoder encoder =new BCryptPasswordEncoder();
+
+
         if (null == user || !new BCryptPasswordEncoder().matches(password, user.getPassword())) {
             throw new ServiceException(CodeEnum.CODE_400.getCode(), "用户名或密码输入错误，登录失败!");
         }
@@ -81,6 +85,11 @@ public class UserService implements UserDetailsService {
                 this.put(TokenUtil.TOKEN, token);
             }
         });
+    }
+
+    public static void main(String[] args) {
+        boolean b = new BCryptPasswordEncoder().matches("123456", "$2a$10$EXmnU1NjZ3SGTi8s4SFKfePymziPESGTRlLdbvSDAK/wu199TcQPu");
+        System.err.println(b);
     }
 
     /**
@@ -128,14 +137,15 @@ public class UserService implements UserDetailsService {
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword().trim()));
         // 注册操作
         user = userRepository.saveAndFlush(user);
+        Integer userid = user.getId();
         // 判断是否添加成功
-        if (null == user || user.getId() == null) {
+        if (null == user || userid == null) {
 
 
             throw new ServiceException(CodeEnum.CODE_500.getCode(), CodeEnum.CODE_500.getMessage());
         }
         //添加默认角色
-        userRoleRepository.saveAndFlush(new UserRole(user.getId(), 1L));
+        userRoleRepository.saveAndFlush(new UserRole(userid, 1L));
         return new UpdateDto(user);
     }
     //手机注册

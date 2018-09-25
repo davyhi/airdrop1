@@ -36,7 +36,7 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
      * @param username
      * @return
      */
-    @Query(value = "SELECT t.* FROM t_user t WHERE t.`status` = 0 AND (t.`phone`=?1 OR t.`email`=?1)",
+    @Query(value = "SELECT t.* FROM t_user t WHERE t.status = 0 AND (t.phone=?1 OR t.email=?1)",
             nativeQuery = true)
     User findByUsername(String username);
 
