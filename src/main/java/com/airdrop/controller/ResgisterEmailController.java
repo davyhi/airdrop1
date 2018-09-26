@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.airdrop.entity.Register;
 import com.airdrop.service.NotificationService;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
@@ -113,28 +114,17 @@ public class ResgisterEmailController {
 	@ApiOperation("邮箱注册")
 	@PostMapping("/registerEmail")
 	public int registerEmail(@RequestParam String email, @RequestParam String password,@RequestParam String passwordConfirm,
-									@RequestParam String captcha, HttpServletRequest request) {
+									@RequestParam String captcha, HttpServletRequest request) throws Exception {
 		ServletContext app = request.getServletContext();
 		// 验证码通过
 		String captchaCode = (String) app.getAttribute("imageCode");
 
 		//如果验证码一致且两次输入的密码一致  如果验证码一致
-		if (password.equals(passwordConfirm) && captcha.equalsIgnoreCase(captchaCode)) {
-
-			User user = new User();
-			user.setEmail(email);
-			user.setPassword(password);
-			try{
-				notificationService.sendNotification(user,request);
-			} catch (Exception e) {
-				logger.info("邮件发送错误"+e.getMessage());
-			}
-
-			Integer yzm = (Integer) app.getAttribute("yzm");
-
-			UpdateDto register = userService.register(user);
-
-
+		if ( captcha.equalsIgnoreCase(captchaCode)) {
+			//	try{
+			//		notificationService.sendNotification(user,request);
+			//	} catch (Exception e) {
+			//		logger.info("邮件发送错误"+e.getMessage());
 
 			return 200;
 
@@ -142,22 +132,27 @@ public class ResgisterEmailController {
 			return 400;
 		}
 	}
+	@ApiOperation("发邮件")
+	@PostMapping("/registerEmailDavy")
+	public void registerEmailDavy(@RequestParam String email, HttpServletRequest request) throws Exception {
+		notificationService.sendNotification(email,request);
+	}
 
 
 	@ApiOperation("邮箱注册")
 	@PostMapping(value = "/yanzhengma",produces = "application/json")
-	public int Yanzhengma(@RequestBody Object yanzhengma, HttpServletRequest request) {
+	public int Yanzhengma(@RequestBody Register register, HttpServletRequest request) {
 		ServletContext app = request.getServletContext();
-		System.out.println(yanzhengma);
-		//// 验证码通过
+		//// 激活码码通过
 		Integer yzm = (Integer) app.getAttribute("yzm");
-		System.out.println(yanzhengma);
 		//Object yzm = request.getSession().getAttribute(request.getSession().getId().toString());
 
 		//如果验证码一致且两次输入的密码一致  如果验证码一致
-		if (yanzhengma==yanzhengma) {
-
-
+		if (register.getYanzhengma().equalsIgnoreCase(yzm.toString())) {
+				User user = new User();
+				user.setEmail(register.getEmail());
+				user.setPassword(register.getPassword());
+			UpdateDto register2 = userService.register(user);
 			return 200;
 
 		}else{

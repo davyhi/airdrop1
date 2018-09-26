@@ -22,9 +22,9 @@ public class NotificationService {
     public NotificationService(JavaMailSender javaMailSender){
         this.javaMailSender=javaMailSender;
     }
-    public void sendNotification(User user, HttpServletRequest request) throws Exception{
+    public void sendNotification(String email, HttpServletRequest request) throws Exception{
         SimpleMailMessage mail = new SimpleMailMessage();
-        mail.setTo(user.getEmail());
+        mail.setTo(email);
         mail.setFrom("davymimocrys@gmail.com");
         mail.setSubject("请查收您的邮箱激活码");
         Integer	yzm=	(int)((Math.random()*9+1)*1000);
