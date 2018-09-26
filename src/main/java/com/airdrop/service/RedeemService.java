@@ -2,18 +2,19 @@ package com.airdrop.service;
 
 import com.airdrop.config.code.CodeEnum;
 import com.airdrop.config.exception.ServiceException;
+import com.airdrop.dto.QueryDto;
 import com.airdrop.dto.RedeemDto;
 import com.airdrop.dto.UpdateDto;
 import com.airdrop.dto._ResultDto;
 import com.airdrop.entity.Redeem;
 import com.airdrop.repository.RedeemRepository;
+import com.airdrop.repository.dao.RedeemDao;
 import com.airdrop.util.LogUtil;
 import com.airdrop.util.RedeemCodeUtils;
 import com.airdrop.util.TokenUtil;
 import com.airdrop.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,9 @@ public class RedeemService {
 
     @Autowired
     private RedeemRepository redeemRepository;
+
+    @Autowired
+    private RedeemDao redeemDao;
 
     @Autowired
     private LogService logService;
@@ -76,8 +80,13 @@ public class RedeemService {
         }
         // 保存到数据库
         redeems = redeemRepository.saveAll(redeems);
+        // 记录id
+        StringBuilder sb = new StringBuilder();
+        for (Redeem r : redeems) {
+            sb.append(r.getId()).append(",");
+        }
         // 添加日志
-        logService.insertLogB(user.getId(), user.getName() + "创建了" + redeemDto.getCount() + "个验证码，长度为：" + redeemDto.getLength(), LogUtil.SUCCESS);
+        logService.insertLogB(user.getId(), user.getName() + "创建了" + redeemDto.getCount() + "个验证码，长度为：" + redeemDto.getLength() + "，ID为：[" + sb.substring(0, sb.length() - 1) + "]", LogUtil.SUCCESS);
         return new UpdateDto(redeems);
     }
 
@@ -88,12 +97,15 @@ public class RedeemService {
      * @param pageable
      * @return
      */
-    public Page<Redeem> find(Redeem redeem, Pageable pageable) {
+    public QueryDto find(Redeem redeem, Pageable pageable) {
         // 设置查询条件
         redeem.setDataStatus(0);
-        // 调用查询方法
-        Page<Redeem> pages = redeemRepository.findAll(Example.of(redeem), pageable);
-        return pages;
+        if (redeem.getUseStatus() != null && redeem.getUseStatus() == 1) {
+            return redeemDao.findJoinUser(pageable);
+        } else {
+            // 调用查询方法
+            return new QueryDto(redeemRepository.findAll(Example.of(redeem), pageable));
+        }
     }
 
     /**

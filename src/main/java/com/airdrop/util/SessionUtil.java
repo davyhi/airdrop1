@@ -40,7 +40,22 @@ public class SessionUtil {
      * @return true:通过，false不通过
      */
     public static boolean checkUser(String token) {
-        return sessionHashtable.get(token) != null;
+        HttpSession httpSession = sessionHashtable.get(token);
+        // 判断token是否存在
+        if (httpSession == null) {
+            return false;
+        }
+        try {
+            // 判断session是否过了有效期
+            if ((System.currentTimeMillis() - httpSession.getCreationTime()) / 1000 >= httpSession.getMaxInactiveInterval()) {
+                sessionHashtable.remove(token);
+                return false;
+            }
+        } catch (IllegalStateException e) {
+            return false;
+        }
+
+        return true;
     }
 
 

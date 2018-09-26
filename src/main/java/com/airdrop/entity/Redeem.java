@@ -47,6 +47,7 @@ public class Redeem implements Serializable {
      * 兑换码领取时间
      */
     @Column(name = "get_stamp")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp getStamp;
 
     /**

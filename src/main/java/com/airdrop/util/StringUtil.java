@@ -1,6 +1,7 @@
 package com.airdrop.util;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -92,6 +93,29 @@ public class StringUtil {
         Timestamp date = new Timestamp(System.currentTimeMillis());
         String format = getDateStr(date);
         System.err.println(format);
+    }
+
+    /**
+     * 时间转换
+     *
+     * @param obj
+     * @return
+     */
+    public static Timestamp parseTime(Object obj) {
+        if (obj == null || obj.equals("")) {
+            return null;
+        }
+        if (obj instanceof Timestamp) {
+            return (Timestamp) obj;
+        } else {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            try {
+                return new Timestamp(sdf.parse(obj.toString()).getTime());
+            } catch (ParseException e) {
+                LogUtil.pringError("StringUtil.parseTime 传入参数值有问题，转换错误");
+            }
+        }
+        return null;
     }
 
     /**
