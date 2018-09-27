@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -178,6 +179,8 @@ public class RedeemService {
             UserVo user = TokenUtil.getUser(token);
             // 修改兑换码状态
             redeem.setUseStatus(1);
+            redeem.setGetUserId(user.getId());
+            redeem.setGetStamp(new Timestamp(System.currentTimeMillis()));
             redeemRepository.saveAndFlush(redeem);
             // 添加用户余额历史
             moneyHistoryRepository.saveAndFlush(new MoneyHistory(redeem.getAirDrop(), 0, user.getId()));
