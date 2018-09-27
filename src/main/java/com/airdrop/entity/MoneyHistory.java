@@ -12,8 +12,8 @@ import java.sql.Timestamp;
  * @Description: 余额历史纪录
  * @date 2018/9/11 11:05
  */
-@Entity(name = "t_money_history")
 @Data
+@Entity(name = "t_money_history")
 public class MoneyHistory implements Serializable {
 
     /**
@@ -22,11 +22,6 @@ public class MoneyHistory implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    /**
-     * 历史内容
-     */
-    private String content;
 
     /**
      * 余额
@@ -51,83 +46,18 @@ public class MoneyHistory implements Serializable {
     @Column(name = "user_id")
     private Integer userId;
 
+    public MoneyHistory() {
 
-    /**
-     * 用户编号
-     */
-    @Column(name = "count")
-    private Integer count;
-
-
-    public Integer getId() {
-        return id;
     }
 
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-
-    public String getContent() {
-        return content;
-    }
-
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-
-    public Integer getMoney() {
-        return money;
-    }
-
-
-    public void setMoney(Integer money) {
-        this.money = money;
-    }
-
-
-    public Integer getPlusOrMinus() {
-        return plusOrMinus;
-    }
-
-
-    public void setPlusOrMinus(Integer plusOrMinus) {
-        this.plusOrMinus = plusOrMinus;
-    }
-
-
-    public Timestamp getCreateStamp() {
-        return createStamp;
-    }
-
-
-    public void setCreateStamp(Timestamp createStamp) {
-        this.createStamp = createStamp;
-    }
-
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-
-    public void setUserId(Integer userId) {
+    public MoneyHistory(int userId) {
         this.userId = userId;
     }
 
-
-    public Integer getCount() {
-        return count;
+    public MoneyHistory(int money, int plusOrMinus, int userId) {
+        this.money = money;
+        this.plusOrMinus = plusOrMinus;
+        this.userId = userId;
     }
-
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-
-
 
 }
