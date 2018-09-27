@@ -35,7 +35,7 @@ public class Redeem implements Serializable {
      * 空投值
      */
     @Column(name = "air_drop")
-    private String airDrop;
+    private Integer airDrop;
 
     /**
      * 兑换码领取人
@@ -84,7 +84,7 @@ public class Redeem implements Serializable {
 
     }
 
-    public Redeem(String code, int userid, String airDrop, String remark) {
+    public Redeem(String code, int userid, Integer airDrop, String remark) {
         this.redeemCode = code;
         this.userId = userid;
         this.airDrop = airDrop;
@@ -102,7 +102,7 @@ public class Redeem implements Serializable {
         if (StringUtil.isNotEmpty(redeem.getRedeemCode())) {
             this.redeemCode = redeem.getRedeemCode();
         }
-        if (StringUtil.isNotEmpty(redeem.getAirDrop())) {
+        if (redeem.getAirDrop() != null) {
             this.airDrop = redeem.getAirDrop();
         }
         if (redeem.getUseStatus() != null) {

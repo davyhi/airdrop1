@@ -44,4 +44,13 @@ public interface RedeemRepository extends JpaRepository<Redeem, Integer>, JpaSpe
     @Query(value = "select t.*,t2.phone,t2.email from t_redeem t left join t_user t2 on t.get_user_id = t2.id where t.data_status = 0 and t2.`status` = 0 and t2.type = 1", nativeQuery = true, countQuery = "select count(t.id) from t_redeem t where t.data_status = 0")
     Page<RedeemVo> findJoinUser(Pageable pageable);
 
+    /**
+     * 根据兑换码查询
+     * @param code
+     * @return
+     */
+    @Query(value = "SELECT t.* FROM t_redeem t WHERE t.data_status = 0 and t.redeem_code = ?1",nativeQuery = true)
+    Redeem findByCode(String code);
+
+
 }

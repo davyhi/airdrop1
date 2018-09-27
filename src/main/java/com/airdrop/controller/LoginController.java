@@ -9,6 +9,7 @@ import com.airdrop.util.CookieUtil2;
 import com.airdrop.util.SessionUtil;
 import com.airdrop.util.StringUtil;
 import com.airdrop.util.TokenUtil;
+import com.airdrop.vo.UserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * @author ShengGuang.Ye
@@ -47,7 +49,7 @@ public class LoginController {
     @PostMapping("/login")
     public UpdateDto login(@RequestParam String username, @RequestParam String password, HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-       return userService.login(username, password, session, request, response);
+        return userService.login(username, password, session, request, response);
     }
 
     @ApiOperation("账户注销登陆")
@@ -73,9 +75,18 @@ public class LoginController {
 
     @ApiOperation("后台和后端心跳连接")
     @PostMapping("/heartbeat")
-    public UpdateDto heartbeat(HttpServletRequest request, HttpSession session) {
-        if (SessionUtil.checkUser(request.getHeader(TokenUtil.TOKEN))) {
-            return new UpdateDto();
+    public UpdateDto heartbeat(HttpServletRequest request) {
+        String token = request.getHeader(TokenUtil.TOKEN);
+        if (SessionUtil.checkUser(token)) {
+            // 返回用户信息
+            UserVo user = TokenUtil.getUser(token);
+            return new UpdateDto(new HashMap<String,String>(){
+                {
+                    this.put("username", user.getPhone());
+                    this.put("email", user.getEmail());
+                    this.put("head", "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3701485667,96126389&fm=200&gp=0.jpg");
+                }
+            });
         } else {
             return new UpdateDto(CodeEnum.CODE_401.getCode(), "登陆失效，请重新登录");
         }

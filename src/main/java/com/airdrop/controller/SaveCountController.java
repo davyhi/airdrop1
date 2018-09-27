@@ -43,25 +43,25 @@ public class SaveCountController {
 
     CookieUtil2 cookieUtil=new CookieUtil2();
     // 数据表里增加了after trigger, 因此无需自己再手动调用controller层的接口来实现把新增的Money的值插入到history表了, 该方法暂时作废不用.
-    @ApiOperation("保存money的值到History表里边")
-    @PostMapping("/saveCount")
-    public String saveCount(@RequestParam Integer count, HttpServletRequest request, HttpSession session, HttpServletResponse reponse) {
-        ServletContext app2 = request.getServletContext();
-        String xixihaha = (String)app2.getAttribute("xixihaha");
-        CookieUtil2 cookieUtil=new CookieUtil2();
-        String cookie = cookieUtil.getCookieValue(request,"davy");
-        if (cookie=="") {
-             cookie = request.getHeader("Authorization");
-        }
-        UserVo user = TokenUtil.getUser(xixihaha);
-        user.getId();
-
-        MoneyHistory history = new MoneyHistory();
-        history.setId(user.getId());
-        history.setCount(count);
-        historyService.insertMoney(history);
-        return "none";
-    }
+//    @ApiOperation("保存money的值到History表里边")
+//    @PostMapping("/saveCount")
+//    public String saveCount(@RequestParam Integer count, HttpServletRequest request, HttpSession session, HttpServletResponse reponse) {
+//        ServletContext app2 = request.getServletContext();
+//        String xixihaha = (String)app2.getAttribute("xixihaha");
+//        CookieUtil2 cookieUtil=new CookieUtil2();
+//        String cookie = cookieUtil.getCookieValue(request,"davy");
+//        if (cookie=="") {
+//             cookie = request.getHeader("Authorization");
+//        }
+//        UserVo user = TokenUtil.getUser(xixihaha);
+//        user.getId();
+//
+//        MoneyHistory history = new MoneyHistory();
+//        history.setId(user.getId());
+//        history.setCount(count);
+//        historyService.insertMoney(history);
+//        return "none";
+//    }
 
     @ApiOperation("保存money的值到user表里边")
     @PostMapping("/saveUserCount")

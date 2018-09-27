@@ -25,7 +25,8 @@ public class NotificationService {
     public void sendNotification(String email, HttpServletRequest request) throws Exception{
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(email);
-        mail.setFrom("davymimocrys@gmail.com");
+        mail.setFrom("jerry.shanghai@qq.com");
+//        mail.setFrom("davymimocrys@gmail.com");
         mail.setSubject("请查收您的邮箱激活码");
         Integer	yzm=	(int)((Math.random()*9+1)*1000);
         ServletContext app2 = request.getServletContext();

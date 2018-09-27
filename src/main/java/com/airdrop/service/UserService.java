@@ -29,7 +29,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -75,7 +74,7 @@ public class UserService implements UserDetailsService {
 
         User user = userRepository.findByUsername(username);
         // 判断用户、密码是否正确
-        BCryptPasswordEncoder encoder =new BCryptPasswordEncoder();
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 
         if (null == user || !new BCryptPasswordEncoder().matches(password, user.getPassword())) {
@@ -342,6 +341,8 @@ public class UserService implements UserDetailsService {
         }
         one.replace(user);
         userRepository.saveAndFlush(one);
+        UserVo currUser = TokenUtil.getUser(token);
+        logService.insertLogB(currUser.getId(), currUser.getName() + "修改了用户ID：" + user.getId() + "的数据", LogUtil.SUCCESS);
         return new _ResultDto();
     }
 

@@ -32,7 +32,7 @@ public class UserDao {
      * @return
      */
     public QueryDto findJoinMoney(Pageable pageable) {
-        String sql = "select t.id,t.phone,t.email,t.money,t.create_stamp,m.last_stamp,t.eos from t_user t left join (select t.t_user_id,left(GROUP_CONCAT(t.time_stamp),locate(',',GROUP_CONCAT(t.time_stamp))-1) as last_stamp from t_money_history t group by t.t_user_id) m on m.t_user_id = t.id where t.`status` = 0 and t.`type` = 0 order by t.id desc";
+        String sql = "select t.id,t.phone,t.email,t.money,t.create_stamp,m.last_stamp,t.eos from t_user t left join (select t.user_id,left(GROUP_CONCAT(t.create_stamp),19) as last_stamp from t_money_history t group by t.user_id) m on m.user_id = t.id where t.`status` = 0 and t.`type` = 0 order by t.id desc";
         Query query = entityManager.createNativeQuery(sql).
                 setMaxResults(pageable.getPageSize()).
                 setFirstResult(pageable.getPageNumber() * pageable.getPageSize());

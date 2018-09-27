@@ -6,7 +6,6 @@ import com.airdrop.service.RedeemService;
 import com.airdrop.util.TokenUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -40,6 +39,13 @@ public class RedeemCodeApi {
         return redeemService.find(redeem, PageRequest.of(pageDto.getPage(), pageDto.getRows(), pageDto.getSort()));
     }
 
+    @ApiOperation("兑换兑换码")
+    @PostMapping("/conversion")
+    public _ResultDto conversion(String code, HttpServletRequest request) {
+        return redeemService.conversion(code, request.getHeader(TokenUtil.TOKEN));
+    }
+
+
     @ApiOperation("校验兑换码是否可使用")
     @ApiImplicitParam(name = "redeemCode", dataType = "string", required = true)
     @PostMapping("/check")
@@ -63,7 +69,6 @@ public class RedeemCodeApi {
     @ApiOperation("后台系统首页需要的空投数据")
     @GetMapping("/home")
     public UpdateDto home() {
-
         return new UpdateDto();
     }
 

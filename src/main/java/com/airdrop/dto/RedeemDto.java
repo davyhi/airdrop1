@@ -13,7 +13,7 @@ import lombok.Data;
 public class RedeemDto extends _RequestDto {
 
     @ApiModelProperty(value = "空投值", dataType = "string")
-    private String airDrop;
+    private Integer airDrop;
 
     @ApiModelProperty(value = "备注", dataType = "string")
     private String remark;

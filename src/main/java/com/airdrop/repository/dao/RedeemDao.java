@@ -31,7 +31,7 @@ public class RedeemDao {
      * @return
      */
     public QueryDto findJoinUser(Pageable pageable) {
-        String sql = "select t.*,t2.phone,t2.email from t_redeem t left join t_user t2 on t.get_user_id = t2.id where t.data_status = 0 and t2.`status` = 0 and t2.type = 1 and t.use_status = 1 order by t.id desc";
+        String sql = "select t.*,t2.phone,t2.email from t_redeem t left join t_user t2 on t.get_user_id = t2.id where t.data_status = 0 and t2.`status` = 0 and t2.type = 0 and t.use_status = 1 order by t.id desc";
         Query query = entityManager.createNativeQuery(sql).
                 setMaxResults(pageable.getPageSize()).
                 setFirstResult(pageable.getPageNumber() * pageable.getPageSize());

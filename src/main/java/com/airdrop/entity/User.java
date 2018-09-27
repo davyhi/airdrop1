@@ -3,6 +3,7 @@ package com.airdrop.entity;
 import com.airdrop.util.StringUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -90,7 +91,15 @@ public class User implements Serializable {
         if (user.getMoney() != null) {
             this.money = user.getMoney();
         }
+        if (StringUtil.isNotEmpty(user.getPassword())) {
+            this.password = new BCryptPasswordEncoder().encode(user.getPassword().trim());
+        }
 
+    }
+
+    public User(Integer id, String password) {
+        this.id = id;
+        this.password = password;
     }
 
     public User(Integer id, String name, String email, String phone) {

@@ -6,8 +6,12 @@ import com.airdrop.dto.QueryDto;
 import com.airdrop.dto.RedeemDto;
 import com.airdrop.dto.UpdateDto;
 import com.airdrop.dto._ResultDto;
+import com.airdrop.entity.MoneyHistory;
 import com.airdrop.entity.Redeem;
+import com.airdrop.entity.User;
+import com.airdrop.repository.MoneyHistoryRepository;
 import com.airdrop.repository.RedeemRepository;
+import com.airdrop.repository.UserRepository;
 import com.airdrop.repository.dao.RedeemDao;
 import com.airdrop.util.LogUtil;
 import com.airdrop.util.RedeemCodeUtils;
@@ -33,6 +37,12 @@ public class RedeemService {
 
     @Autowired
     private RedeemRepository redeemRepository;
+
+    @Autowired
+    private MoneyHistoryRepository moneyHistoryRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private RedeemDao redeemDao;
@@ -147,6 +157,37 @@ public class RedeemService {
         redeemRepository.saveAndFlush(oldRe);
         // 添加日志
         logService.insertLogB(user.getId(), user.getName() + "修改了兑换码ID：" + redeem.getId(), LogUtil.SUCCESS);
+        return new _ResultDto();
+    }
+
+    /**
+     * 兑换码兑换
+     *
+     * @param code
+     * @param token
+     * @return
+     */
+    public _ResultDto conversion(String code, String token) {
+        Redeem redeem = redeemRepository.findByCode(code);
+        if (redeem == null) {
+            throw new ServiceException(CodeEnum.CODE_400.getCode(), "兑换码不存在");
+        } else if (redeem.getUseStatus() == 1) {
+            throw new ServiceException(CodeEnum.CODE_400.getCode(), "兑换码已被使用");
+        } else {
+            // 获得当前用户
+            UserVo user = TokenUtil.getUser(token);
+            // 修改兑换码状态
+            redeem.setUseStatus(1);
+            redeemRepository.saveAndFlush(redeem);
+            // 添加用户余额历史
+            moneyHistoryRepository.saveAndFlush(new MoneyHistory(redeem.getAirDrop(), 0, user.getId()));
+            // 修改用户当前余额
+            User one = userRepository.getOne(user.getId());
+            one.setMoney(one.getMoney() + redeem.getAirDrop());
+            userRepository.saveAndFlush(one);
+            // 存入日志操作
+            logService.insertLogB(user.getId(), (user.getPhone() == null ? user.getEmail() : user.getPhone()) + "领取了兑换码：" + code + "，额度为：" + redeem.getAirDrop(), LogUtil.SUCCESS);
+        }
         return new _ResultDto();
     }
 
