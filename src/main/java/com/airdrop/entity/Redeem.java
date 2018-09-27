@@ -47,7 +47,7 @@ public class Redeem implements Serializable {
      * 兑换码领取时间
      */
     @Column(name = "get_stamp")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Timestamp getStamp;
 
     /**
@@ -76,7 +76,7 @@ public class Redeem implements Serializable {
     /**
      * 创建时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Column(name = "create_stamp")
     private Timestamp createStamp;
 

@@ -35,7 +35,7 @@ public class RedeemVo implements Serializable {
     /**
      * 兑换码领取时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Timestamp getStamp;
 
     /**
@@ -61,7 +61,7 @@ public class RedeemVo implements Serializable {
     /**
      * 创建时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Timestamp createStamp;
 
     /**

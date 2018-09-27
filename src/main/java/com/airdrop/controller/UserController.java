@@ -36,7 +36,8 @@ public class UserController {
     @ApiOperation("用户查询")
     @GetMapping
     public QueryDto find(User user, PageDto dto) {
-        return userService.find(user, PageRequest.of(dto.getPage(), dto.getRows(), dto.getSort()));
+        QueryDto q = userService.find(user, PageRequest.of(dto.getPage(), dto.getRows(), dto.getSort()));
+        return q;
     }
 
     @ApiOperation("用户删除")

@@ -1,5 +1,6 @@
 package com.airdrop.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -38,6 +39,7 @@ public class MoneyHistory implements Serializable {
      * 创建时间
      */
     @Column(name = "create_stamp")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Timestamp createStamp;
 
     /**

@@ -71,7 +71,7 @@ public class User implements Serializable {
      * 创建时间
      */
     @Column(name = "create_stamp")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Timestamp createStamp;
 
     public User() {

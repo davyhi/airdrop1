@@ -27,8 +27,8 @@ public class MoneyHistoryController {
 
     @ApiOperation("用户余额历史查询")
     @GetMapping("/{id}")
-    public QueryDto find(@PathVariable Integer userid, PageDto pageDto) {
-        return moneyHistoryService.find(userid, PageRequest.of(pageDto.getPage(), pageDto.getRows(), pageDto.getSort()));
+    public QueryDto find(@PathVariable Integer id, PageDto pageDto) {
+        return moneyHistoryService.find(id, PageRequest.of(pageDto.getPage(), pageDto.getRows(), pageDto.getSort()));
     }
 
 }
