@@ -186,7 +186,7 @@ public class RedeemService {
             moneyHistoryRepository.saveAndFlush(new MoneyHistory(redeem.getAirDrop(), 0, user.getId()));
             // 修改用户当前余额
             User one = userRepository.getOne(user.getId());
-            one.setMoney(one.getMoney() + redeem.getAirDrop());
+            one.setMoney(one.getMoney() == null ? redeem.getAirDrop() : (one.getMoney() + redeem.getAirDrop()));
             userRepository.saveAndFlush(one);
             // 存入日志操作
             logService.insertLogB(user.getId(), (user.getPhone() == null ? user.getEmail() : user.getPhone()) + "领取了兑换码：" + code + "，额度为：" + redeem.getAirDrop(), LogUtil.SUCCESS);
