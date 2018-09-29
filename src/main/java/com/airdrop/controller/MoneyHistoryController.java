@@ -2,6 +2,7 @@ package com.airdrop.controller;
 
 import com.airdrop.dto.PageDto;
 import com.airdrop.dto.QueryDto;
+import com.airdrop.dto.UpdateDto;
 import com.airdrop.service.MoneyHistoryService;
 import com.airdrop.util.TokenUtil;
 import io.swagger.annotations.ApiOperation;
@@ -40,4 +41,8 @@ public class MoneyHistoryController {
         return moneyHistoryService.find(PageRequest.of(pageDto.getPage(), pageDto.getRows(), pageDto.getSort()), request.getHeader(TokenUtil.TOKEN));
     }
 
+    @GetMapping("/money")
+    public UpdateDto getUser(HttpServletRequest request){
+        return moneyHistoryService.getUse(request.getHeader(TokenUtil.TOKEN));
+    }
 }

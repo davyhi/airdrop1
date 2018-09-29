@@ -23,6 +23,6 @@ public interface MoneyHistoryRepository extends JpaRepository<MoneyHistory, Inte
     * 根据用户id查询 用户空投历史记录
     * */
     @Query(value = "select time_stamp , money from t_money_history where t_user_id= ?1",nativeQuery = true)
-    List findHistoryCountByUserId(Integer userId);
+    List  findHistoryCountByUserId(Integer userId);
 }
 

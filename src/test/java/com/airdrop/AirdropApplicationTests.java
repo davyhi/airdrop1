@@ -17,9 +17,9 @@ public class AirdropApplicationTests {
 
     @Test
     public void contextLoads() {
-        String username = "mimocrys@166.com";
-        User user = userRepository.findByUsername(username);
-        System.err.println(user.toString());
+        //String username = "mimocrys@166.com";
+        //User user = userRepository.findByUsername(username);
+        //System.err.println(user.toString());
 
     }
 
