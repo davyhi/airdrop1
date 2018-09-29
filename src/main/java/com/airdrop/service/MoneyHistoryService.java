@@ -5,6 +5,7 @@ import com.airdrop.config.exception.ServiceException;
 import com.airdrop.dto.QueryDto;
 import com.airdrop.entity.MoneyHistory;
 import com.airdrop.repository.MoneyHistoryRepository;
+import com.airdrop.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Pageable;
@@ -49,6 +50,17 @@ public class MoneyHistoryService {
             throw new ServiceException(CodeEnum.CODE_400.getCode(), "用户id不能为空");
         } else {
             return new QueryDto(historyRepository.findAll(Example.of(new MoneyHistory(userid)), pageable));
+        }
+    }
+
+    /**
+     * 查询当前用户余额历史
+     */
+    public QueryDto find(Pageable pageable, String token) {
+        if (token == null) {
+            throw new ServiceException(CodeEnum.CODE_401.getCode(), CodeEnum.CODE_401.getMessage());
+        } else {
+            return new QueryDto(historyRepository.findAll(Example.of(new MoneyHistory(TokenUtil.getUser(token).getId())), pageable));
         }
     }
 

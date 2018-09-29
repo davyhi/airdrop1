@@ -191,7 +191,7 @@ public class RedeemService {
             // 存入日志操作
             logService.insertLogB(user.getId(), (user.getPhone() == null ? user.getEmail() : user.getPhone()) + "领取了兑换码：" + code + "，额度为：" + redeem.getAirDrop(), LogUtil.SUCCESS);
         }
-        return new _ResultDto();
+        return new UpdateDto(redeem.getAirDrop());
     }
 
     /**
