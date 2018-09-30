@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.airdrop.entity.Register;
+import com.airdrop.entity.RegisterPhone;
 import com.airdrop.service.NotificationService;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
@@ -121,10 +122,7 @@ public class ResgisterEmailController {
 
 		//如果验证码一致且两次输入的密码一致  如果验证码一致
 		if ( captcha.equalsIgnoreCase(captchaCode)) {
-			//	try{
-			//		notificationService.sendNotification(user,request);
-			//	} catch (Exception e) {
-			//		logger.info("邮件发送错误"+e.getMessage());
+
 
 			return 200;
 
@@ -132,10 +130,46 @@ public class ResgisterEmailController {
 			return 400;
 		}
 	}
+	@ApiOperation("手机注册")
+	@PostMapping("/registerPhone")
+	public int registerPhone(@RequestParam String phone, @RequestParam String password2,@RequestParam String passwordConfirm2,
+							 @RequestParam String captcha2, HttpServletRequest request) {
+		ServletContext app = request.getServletContext();
+		String captchaCode=(String)app.getAttribute("imageCode");
+		if (password2.equals(passwordConfirm2) && captcha2.equalsIgnoreCase(captchaCode)) {
+			//User user = new User();
+			////将手机号存入
+			//user.setPhone(phone);
+			////将密码存入
+			//user.setPassword(password2);
+			////调用service层方法进行注册
+			//userService.registerPhone(user);
+			////返回状态码200
+			return 200;
+		}else{
+			//注册失败,返回状态码400
+			return 400;
+		}
+
+
+	}
+
+
+
+
 	@ApiOperation("发邮件")
 	@PostMapping("/registerEmailDavy")
 	public void registerEmailDavy(@RequestParam String email, HttpServletRequest request) throws Exception {
 		notificationService.sendNotification(email,request);
+	}
+	@ApiOperation("手机最终注册")
+	@PostMapping("/shoujiyanzhengma")
+	public int Shoujiyanzhengma(@RequestBody RegisterPhone registerPhone){
+		User user = new User();
+		user.setPhone(registerPhone.getPhone());
+		user.setPassword(registerPhone.getPassword());
+		UpdateDto register2 = userService.register(user);
+		return 200;
 	}
 
 
@@ -167,33 +201,7 @@ public class ResgisterEmailController {
 
 
 
-	@ApiOperation("手机注册")
-	@PostMapping("/registerPhone")
-	public int registerPhone(@RequestParam String phone, @RequestParam String password2,@RequestParam String passwordConfirm2,
-							 @RequestParam String captcha2, HttpServletRequest request) {
-		ServletContext app = request.getServletContext();
-		String captchaCode=(String)app.getAttribute("imageCode");
 
-
-
-			////验证码一致 两次输入的密码一致
-			if (password2.equals(passwordConfirm2) && captcha2.equalsIgnoreCase(captchaCode)) {
-				User user = new User();
-				//将手机号存入
-				user.setPhone(phone);
-				//将密码存入
-				user.setPassword(password2);
-				//调用service层方法进行注册
-				userService.registerPhone(user);
-				//返回状态码200
-				return 200;
-			}else{
-				//注册失败,返回状态码400
-				return 400;
-			}
-
-
-	}
 
 
 
